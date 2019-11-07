@@ -1,4 +1,6 @@
-function searchLocation(userInput) {
+let searchResults = [];
+
+function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
     userInput +
@@ -6,10 +8,18 @@ function searchLocation(userInput) {
 
   $.ajax({
     url: queryUrl,
-    method: "GET"
-  }).then(function(response) {
-    let results = response.response.venues;
-    console.log(queryUrl);
-    console.log(results);
+    method: "GET",
+    datatype: "json",
+    success: showResults
   });
+
+  function showResults(response) {
+    searchResults = response.response.venues;
+    console.log(queryUrl);
+    appendLocationDetailsToPage(searchResults);
+  }
+}
+
+function appendLocationDetailsToPage(locations) {
+  console.log(locations);
 }
