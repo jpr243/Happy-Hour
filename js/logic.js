@@ -31,6 +31,7 @@ function appendLocationDetailsToPage(locations) {
 
     let barModal = $("#portfolioModal1").clone().appendTo("#page-top")
     barModal.attr("class", "bar-modals");
+    $("#bar-name").html(barNames);
   }
 }
 
