@@ -17,11 +17,27 @@ function searchByUserLocation(userInput) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
+    getLatAndLong(searchResults);
   }
 }
 
 function appendLocationDetailsToPage(locations) {
   for (let i = 0; i < locations.length; i++) {
-    console.log(locations[i].name);
+    let barNames = locations[i].name;
+    
+    let barPicture = $("#result-template").clone().appendTo("#bar-results");
+    barPicture.attr("class", "bars");
+    $(".bars").css("display", "block");
+
+    let barModal = $("#portfolioModal1").clone().appendTo("#page-top")
+    barModal.attr("class", "bar-modals");
+  }
+}
+
+function getLatAndLong(locations) {
+  for (let i = 0; i < locations.length; i++) {
+    let latitude = searchResults[i].location.lat;
+    let longitude = searchResults[i].location.lng;
+    console.log(locations[i].name, latitude, longitude);
   }
 }
