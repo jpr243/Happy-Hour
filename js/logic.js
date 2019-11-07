@@ -21,5 +21,7 @@ function searchByUserLocation(userInput) {
 }
 
 function appendLocationDetailsToPage(locations) {
-  console.log(locations);
+  for (let i = 0; i < locations.length; i++) {
+    console.log(locations[i].name);
+  }
 }
