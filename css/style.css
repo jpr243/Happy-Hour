@@ -1,11 +1,15 @@
 #result-template {
-    display: none;
+  display: none;
 }
 
 .portfolio-item {
-    padding: 50px;
+  padding: 50px;
 }
 
 .bar-modals {
-    display: none;
+  display: none;
+}
+
+#portfolio {
+  justify-content: center;
 }
