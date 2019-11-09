@@ -556,6 +556,7 @@
 
   <!-- Happy Hour scripts -->
   <script src="js/logic.js"></script>
+  <script src="js/logicdc.js"></script>
 
   <script>
     $("#bar-search-button").on("click", function(event) {
@@ -563,6 +564,7 @@
       let userSearch = $("#user-location-input").val();
       console.log("Searching bars near " + userSearch);
       searchByUserLocation(userSearch);
+      getPhotos(userSearch);
     })
   </script>
 
