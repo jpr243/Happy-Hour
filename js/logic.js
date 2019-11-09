@@ -1,4 +1,5 @@
 let searchResults = [];
+let arrPhotoURL = [];
 
 function searchByUserLocation(userInput) {
   queryUrl =
@@ -16,8 +17,8 @@ function searchByUserLocation(userInput) {
   function showResults(response) {
     searchResults = response.response.venues;
     console.log(queryUrl);
-    let lat = response.response.venues[0].location.lat;
-    let lng = response.response.venues[0].location.lng;
+    // let lat = response.response.venues[0].location.lat;
+    // let lng = response.response.venues[0].location.lng;
     appendLocationDetailsToPage(searchResults);
     getLatAndLong(searchResults);
     getMoreBarDetails(searchResults);
@@ -74,11 +75,12 @@ function getLatAndLong(locations) {
     let latitude = searchResults[i].location.lat;
     let longitude = searchResults[i].location.lng;
     console.log(locations[i].name, latitude, longitude);
+    arrPhotoURL[i] = getPhotos(latitude, longitude); //array that contains the photo for the bar chosen
   }
 }
 
 function getPhotos(lat, lng) {
-  let queryURL = "https://developers.zomato.com/api/v2.1/search?entity_type=city&q=" + suburb + "&cuisines=bar%2C%20pub%2C%20nightlife";
+  let queryURL = "https://developers.zomato.com/api/v2.1/search?lat=" + lat + "&lon=" + lng + "&cuisines=bar%2C%20pub%2C%20nightlife";
     $.ajax({
         url: queryURL,
         method: "GET",
