@@ -59,7 +59,7 @@ function getMoreBarDetails(locations) {
     queryUrl =
       "https://api.foursquare.com/v2/venues/" +
       venueId +
-      "?&client_id=GHTRMLUX0F5IQYOXBJUC2055AE0QB3YHCDKJ515HWZWVMSSA&client_secret=FFBQ2IP0B2XSBZL2DJO44HCGKV3QU535C3KN15FYPPMBIRBR&v=20191105";
+      "?&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
 
     $.ajax({
       url: queryUrl,
