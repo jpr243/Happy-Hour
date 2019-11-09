@@ -335,14 +335,14 @@ $.ageCheck({
   <script src="js/logic.js"></script>
 
   <script>
-  $(".distance-select").on("click", function(event) {
+  $("#bar-search-button").on("click", function(event) {
     event.preventDefault();
-    maxBarDistance = this.id;
-    returnMaxBarDistance(maxBarDistance);
+    // maxBarDistance = this.id;
+    // returnMaxBarDistance(maxBarDistance);
     
     let userSearch = $("#user-location-input").val();
-    console.log("Searching bars near " + userSearch + " within a radius of " + maxBarDistance);
-    searchByUserLocation(userSearch, maxBarDistance);
+    console.log("Searching bars near " + userSearch);
+    searchByUserLocation(userSearch);
   });
   </script>
 
