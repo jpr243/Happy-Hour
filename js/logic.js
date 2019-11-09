@@ -18,6 +18,7 @@ function searchByUserLocation(userInput) {
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
     getLatAndLong(searchResults);
+    getMoreBarDetails(searchResults);
   }
 }
 
@@ -46,6 +47,23 @@ function appendLocationDetailsToPage(locations) {
     $(barModal)
       .find(".bar-address")
       .html(barAddress);
+  }
+}
+
+function getMoreBarDetails(locations) {
+  for (let i = 0; i < locations.length; i++) {
+    let venueId = locations[i].id;
+    queryUrl =
+      "https://api.foursquare.com/v2/venues/" +
+      venueId +
+      "?&client_id=GHTRMLUX0F5IQYOXBJUC2055AE0QB3YHCDKJ515HWZWVMSSA&client_secret=FFBQ2IP0B2XSBZL2DJO44HCGKV3QU535C3KN15FYPPMBIRBR&v=20191105";
+
+    $.ajax({
+      url: queryUrl,
+      method: "GET"
+    }).then(function(response) {
+      console.log(response.venue.hours);
+    });
   }
 }
 

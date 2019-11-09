@@ -7,12 +7,14 @@
 
 <head>
 
+
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Happy Hour- Discover Local Bars</title>
+  <title>Perth Happy Hour- Discover Local Bars</title>
 
   <!-- Custom fonts for this theme -->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -25,14 +27,23 @@
   <link href="css/style.css" rel="stylesheet">
   <link href="css/freelancer.css" rel="stylesheet">
 
+  <!--Map Trial-->
+  <script src="https://maps.googleapis.com/maps/api/js?key=Your_API_Key"></script>
+
+  <!-- Modal Age Check-->
+
+
+
+
 </head>
 
 <body id="page-top">
 
+
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">Happy Hour</a>
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">Perth Happy Hour</a>
       <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
         type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
         aria-expanded="false" aria-label="Toggle navigation">
@@ -40,71 +51,93 @@
           class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
           type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
           aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Discover Local Bars</a>
-            </li>
-            <!-- <li class="nav-item mx-0 mx-lg-1">
+          <button
+            class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
+            type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item mx-0 mx-lg-1">
+                <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Discover Local
+                  Bars</a>
+              </li>
+              <!-- <li class="nav-item mx-0 mx-lg-1">
             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
           </li>
           <li class="nav-item mx-0 mx-lg-1">
             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a>
           </li> -->
-          </ul>
-        </div>
+            </ul>
+          </div>
     </div>
   </nav>
 
+
+
   <!-- Masthead -->
-  <header class="masthead bg-primary text-white text-center">
-    <div id="background">
-      <div class="container d-flex align-items-center flex-column">
+  <section class="page-section first page" id="firstPage">
 
-        <!-- Masthead Avatar Image -->
-        <img class="masthead-avatar mb-5"
-          src="https://www.ydesignservices.com/wp-content/uploads/2016/07/Googlemap-600x551.jpg" alt="Google Map Image">
+    <header class="masthead bg-primary text-white text-center">
 
-        <!-- Masthead Heading -->
-        <h1 class="masthead-heading text-uppercase mb-0">Happy Hour</h1>
+      <div id="background">
 
-        <!-- Icon Divider -->
-        <div class="divider-custom divider-light">
-          <div class="divider-custom-line"></div>
-          <div class="divider-custom-icon">
-            <i class="fas fa-star"></i>
+        <div class="container d-flex align-items-center flex-column">
+
+
+          <!-- Masthead Avatar Image -->
+          <!-- <img class="masthead-avatar mb-5"
+        src="https://images.unsplash.com/photo-1485265449635-ca623a55e95c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="Cocktail Img"> -->
+
+          <!-- Masthead Heading -->
+          <h1 class="masthead-heading text-uppercase mb-0">Perth Happy Hour</h1>
+
+          <!-- Icon Divider -->
+          <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="divider-custom-line"></div>
           </div>
-          <div class="divider-custom-line"></div>
-        </div>
 
-        <!-- Masthead Subheading -->
-        <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p>
-        <br>
+          <!-- Masthead Subheading -->
+          <p class="masthead-subheading font-weight-light mb-0"></p>
+          <br>
 
-        <form>
-          <div class="form-group">
-            <label for="user-location-input">Your location:</label>
-            <input type="text" class="form-control" id="user-location-input" placeholder="e.g. Northbridge">
-          </div>
-          <button class="js-scroll-trigger" id="bar-search-button">Find bars near me!</button>
-        </form>
-        <div class="dropdown">
-          <button class="btn btn-secondary btn-xl dropdown-toggle" type="button" id="dropdownMenuButton"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Select Bar Distance
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">1 km</a>
-            <a class="dropdown-item" href="#">2 km</a>
-            <a class="dropdown-item" href="#">3 km</a>
-          </div>
+          <form>
+
+            <div class="form-group">
+              <label for="user-location-input">Your location:</label>
+              <input type="text" class="form-control" id="user-location-input" placeholder="e.g. Northbridge">
+            </div>
+
+          </form>
+          <!-- Find Bars Button -->
+
+          <a class="btn btn-xl btn-outline-light" id="bar-search-button">
+            Find Bars Near Me!
+          </a>
         </div>
       </div>
-    </div>
-  </header>
+
+
+
+      <!-- <div class="dropdown">
+        <button class="btn btn-secondary btn-xl dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select Bar Distance
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item distance-select" id="1000" href="#">1 km</a>
+          <a class="dropdown-item distance-select" id="2000" href="#">2 km</a>
+          <a class="dropdown-item distance-select" id="3000" href="#">3 km</a>
+        </div>
+      </div> -->
+    </header>
+  </section>
 
   <!-- Portfolio Section -->
   <section class="page-section portfolio" id="portfolio">
@@ -112,7 +145,7 @@
 
       <!-- Portfolio Section Heading -->
       <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Local Bars</h2>
-      <center>Click on photos below to discover local bars.</center>
+      <p id="results-tagline">Click on photos below to discover local bars.</p>
 
       <!-- Icon Divider -->
       <div class="divider-custom">
@@ -231,10 +264,9 @@
                 <!-- Portfolio Modal - Text -->
                 <p class="mb-5"></p>
                 <p class="bar-address">Hay St & Cathedral Ave</p>
-                <p>Hours: Closed ⋅ Opens 4PM</p>
-                <p>
-                  <halfordbar.com.au</p> <p>Phone: (08) 6168 7780
-                </p>
+                <p id="bar-hours"></p>
+                <p id="bar-phone"></p>
+                <p id="bar-website"></p>
 
                 <button class="btn btn-primary" href="#" data-dismiss="modal">
                   <i class="fas fa-times fa-fw"></i>
@@ -262,16 +294,67 @@
   <!-- Custom scripts for this template -->
   <script src="js/freelancer.min.js"></script>
 
+  <!-- Custom scripts for age check modal-->
+  <link href="./Age Verification/src/agecheck.css" rel="stylesheet">
+  <script src="./Age Verification/dist/jquery.agecheck-min.js"></script>
+
+  <!-- Modal Age -->
+  <script>
+    $.ageCheck({
+
+      // min age
+      minAge: 18,
+
+      // URL to redirect when successful
+      // redirectTo: '',
+
+      // URL to redirect when failed
+      redirectOnFail: 'http://www.wtfshouldidowithmylife.com/',
+
+      // popup title
+      title: 'Age Verification',
+
+      // popup message
+      copy: 'This Website requires you to be [18] years or older to enter. Please enter your Date of Birth in the fields below in order to continue:',
+
+      // a callback function called when successful
+      success: null,
+
+      // success message
+      successMsg: {
+        header: 'Success!',
+        body: 'You are now being redirected back to the application...'
+      },
+
+      // fail message
+      underAgeMsg: 'Sorry, you are not old enough to view this site...',
+
+      // error message
+      errorMsg: {
+        invalidDay: 'Day is invalid or empty',
+        invalidYear: 'Year is invalid or empty'
+      },
+
+      // sessionStorage, localStorage, or cookie
+      storage: 'sessionStorage',
+
+      // the number of days
+      storageExpires: null,
+    });
+  </script>
   <!-- Happy Hour scripts -->
   <script src="js/logic.js"></script>
 
   <script>
     $("#bar-search-button").on("click", function (event) {
       event.preventDefault();
+      // maxBarDistance = this.id;
+      // returnMaxBarDistance(maxBarDistance);
+
       let userSearch = $("#user-location-input").val();
       console.log("Searching bars near " + userSearch);
       searchByUserLocation(userSearch);
-    })
+    });
   </script>
 
 </body>
