@@ -104,7 +104,7 @@
 
       <!-- Portfolio Section Heading -->
       <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Local Bars</h2>
-      <center>Click on photos below to discover local bars.</center>
+      <p id="results-tagline">Click on photos below to discover local bars.</p>
 
       <!-- Icon Divider -->
       <div class="divider-custom">
@@ -223,10 +223,9 @@
                 <!-- Portfolio Modal - Text -->
                 <p class="mb-5"></p>
                 <p class="bar-address">Hay St & Cathedral Ave</p>
-                <p>Hours: Closed ⋅ Opens 4PM</p>
-                <p>
-                  <halfordbar.com.au</p> <p>Phone: (08) 6168 7780
-                </p>
+                <p id="bar-hours"></p>
+                <p id="bar-phone"></p> 
+                <p id="bar-website"></p>
 
                 <button class="btn btn-primary" href="#" data-dismiss="modal">
                   <i class="fas fa-times fa-fw"></i>
@@ -262,6 +261,7 @@
     event.preventDefault();
     maxBarDistance = this.id;
     returnMaxBarDistance(maxBarDistance);
+    
     let userSearch = $("#user-location-input").val();
     console.log("Searching bars near " + userSearch + " within a radius of " + maxBarDistance);
     searchByUserLocation(userSearch, maxBarDistance);
