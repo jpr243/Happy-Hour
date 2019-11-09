@@ -97,7 +97,6 @@
           <label for="user-location-input">Your location:</label>
           <input type="text" class="form-control" id="user-location-input" placeholder="e.g. Northbridge">
         </div>
-        <button class="js-scroll-trigger" id="bar-search-button">Find bars near me!</button>
       </form>
       <div class="dropdown">
         <button class="btn btn-secondary btn-xl dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -105,9 +104,9 @@
           Select Bar Distance
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">1 km</a>
-          <a class="dropdown-item" href="#">2 km</a>
-          <a class="dropdown-item" href="#">3 km</a>
+          <a class="dropdown-item distance-select" id="1000" href="#">1 km</a>
+          <a class="dropdown-item distance-select" id="2000" href="#">2 km</a>
+          <a class="dropdown-item distance-select" id="3000" href="#">3 km</a>
         </div>
         
       
@@ -323,12 +322,14 @@ $.ageCheck({
   <script src="js/logic.js"></script>
 
   <script>
-    $("#bar-search-button").on("click", function(event) {
-      event.preventDefault();
-      let userSearch = $("#user-location-input").val();
-      console.log("Searching bars near " + userSearch);
-      searchByUserLocation(userSearch);
-    })
+  $(".distance-select").on("click", function(event) {
+    event.preventDefault();
+    maxBarDistance = this.id;
+    returnMaxBarDistance(maxBarDistance);
+    let userSearch = $("#user-location-input").val();
+    console.log("Searching bars near " + userSearch + " within a radius of " + maxBarDistance);
+    searchByUserLocation(userSearch, maxBarDistance);
+  });
   </script>
 
 </body>
