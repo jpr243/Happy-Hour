@@ -1,0 +1,19 @@
+#result-template {
+  display: none;
+}
+
+.portfolio-item {
+  padding: 50px;
+}
+
+.bar-modals {
+  display: none;
+}
+
+#portfolio {
+  justify-content: center;
+}
+
+#results-tagline {
+  text-align: center;
+}
