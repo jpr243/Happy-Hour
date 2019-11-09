@@ -548,6 +548,7 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+
 }
 
 @media (min-width: 576px) {
@@ -9694,7 +9695,7 @@ a.text-dark:hover, a.text-dark:focus {
 .masthead {
   padding-top: calc(6rem + 74px);
   padding-bottom: 6rem;
-  background-image: url("https://images.unsplash.com/photo-1539867462940-bc733134d96e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80");
+ 
 }
 
 .masthead .masthead-heading {
@@ -9840,4 +9841,9 @@ form .row:first-child .floating-label-form-group {
   background-color: #1a252f;
 }
 
+#background {
+  background-image: url("https://images.unsplash.com/photo-1539867462940-bc733134d96e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80");
+  background-repeat: no-repeat;
 
+}
+  
