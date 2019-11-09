@@ -4,7 +4,7 @@ function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
     userInput +
-    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&client_id=JQIY4W3MHQQLTPORXPCA2XJDIWTFHBZDTLJPO4F3IBWLH5NI&client_secret=TOTL05GAHJ5IFFA44YJL1HNPLB2HDABTV025VKIRNN34WYYV&v=20191105";
+    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&limit=1&client_id=JQIY4W3MHQQLTPORXPCA2XJDIWTFHBZDTLJPO4F3IBWLH5NI&client_secret=TOTL05GAHJ5IFFA44YJL1HNPLB2HDABTV025VKIRNN34WYYV&v=20191105";
 
   $.ajax({
     url: queryUrl,
@@ -56,13 +56,19 @@ function getMoreBarDetails(locations) {
     queryUrl =
       "https://api.foursquare.com/v2/venues/" +
       venueId +
-      "?&client_id=GHTRMLUX0F5IQYOXBJUC2055AE0QB3YHCDKJ515HWZWVMSSA&client_secret=FFBQ2IP0B2XSBZL2DJO44HCGKV3QU535C3KN15FYPPMBIRBR&v=20191105";
+      "?&client_id=3TC2NRH4SCL2JU3OZZZRS10LVB0HEAVFAWDK3SX4JZBNE04D&client_secret=MUIDSKGEHYZN0ASJVEWNMD2ZRBP5AJGJYCAWFNO4L2YITILD&v=20191105";
 
     $.ajax({
       url: queryUrl,
       method: "GET"
     }).then(function(response) {
-      console.log(response.venue.hours);
+      let venueHours = response.response.venue.hours;
+      console.log(venueHours);
+
+      let contactDetails = response.response.venue.contact;
+      console.log(contactDetails);
+      
+      appendOpeningHoursAndContactDetails(venueHours, contactDetails);
     });
   }
 }
@@ -73,4 +79,8 @@ function getLatAndLong(locations) {
     let longitude = searchResults[i].location.lng;
     console.log(locations[i].name, latitude, longitude);
   }
+}
+
+function appendOpeningHoursAndContactDetails(hours, contact) {
+  // To be coded
 }
