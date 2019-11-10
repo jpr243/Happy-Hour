@@ -77,8 +77,11 @@ function getLatAndLong(locations) {
     let longitude = searchResults[i].location.lng;
     console.log(locations[i].name, latitude, longitude);
     // arrPhotoURL[i] = getPhotos(locations[i].name); //array that contains the photo for the bar chosen
-    arrPhotoURL[i] = getZomPub(locations[i].name, i)
+    getZomPub(locations[i].name, i);
+    arrPhotoURL[i] = restFotes.slice(0);
+    restFotes = [];
   }
+  console.log("Final array of photo urls: " + arrPhotoURL);
 }
 
 function getZomPub(pubName, i) {  //even with the precise name input to the api, zomato still returns multiple establishments
@@ -91,7 +94,7 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
       method: "GET",
       headers: { "user-key": "7c5b101b634a31bcfcda3cf933e803ba" }
 
-  }).then(function(respZomato){  //iterate through the 
+  }).done(function(respZomato){  //iterate through the 
     console.log(respZomato);
     $.each(respZomato.restaurants, function(j, pubDeets){  //loop through the list of potentially matching restaurants
                                                            //to find the exact match using regex .test function
@@ -100,7 +103,7 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
       if (testName.test(pubName)) {   //regex test if the Zomato restaurant name matches the name from foursquare
         console.log("regex works for " + pubName + ".");
         // restFotes = getPhotoPub(pubDeets, i)  //call function to retrieve the Zomato photos
-        getPhotoPub(pubDeets, i)
+        getPhotoPub(pubDeets);
         return false;
       }
     })
@@ -108,13 +111,13 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
   // return restFotes;
 }
 
-function getPhotoPub(pubDeets, i) {  //iterate through the object containing the photos for each matching restaurant in Zomato 
+function getPhotoPub(pubDeets) {  //iterate through the object containing the photos for each matching restaurant in Zomato 
   $.each(pubDeets.restaurant.photos, function(j, fote) {
-    console.log(fote.photo.url);
-    let foteURL = fote.photo.url;
-    console.log(foteURL);
-    console.log(restFotes);
-    restFotes[j] = foteURL;
+    // console.log(fote.photo.url);
+    // let foteURL = fote.photo.url;
+    // console.log(foteURL);
+    // console.log(restFotes);
+    restFotes[j] = fote.photo.url;
   })
-  // return restFotes;
+  console.log(restFotes);
 }
