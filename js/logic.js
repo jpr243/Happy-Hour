@@ -1,5 +1,6 @@
 let searchResults = [];
 let arrPhotoURL = [];
+let restFotes = [];
 
 function searchByUserLocation(userInput) {
   queryUrl =
@@ -75,19 +76,45 @@ function getLatAndLong(locations) {
     let latitude = searchResults[i].location.lat;
     let longitude = searchResults[i].location.lng;
     console.log(locations[i].name, latitude, longitude);
-    arrPhotoURL[i] = getPhotos(latitude, longitude); //array that contains the photo for the bar chosen
+    // arrPhotoURL[i] = getPhotos(locations[i].name); //array that contains the photo for the bar chosen
+    arrPhotoURL[i] = getZomPub(locations[i].name, i)
   }
 }
 
-function getPhotos(lat, lng) {
-  let queryURL = "https://developers.zomato.com/api/v2.1/search?lat=" + lat + "&lon=" + lng + "&cuisines=bar%2C%20pub%2C%20nightlife";
-    $.ajax({
-        url: queryURL,
-        method: "GET",
-        headers: { "user-key": "7c5b101b634a31bcfcda3cf933e803ba" }
-    }).then(function(response){
-        ajaxResponse = response;
-        console.log(response);
-        showPhotos();
+function getZomPub(pubName, i) {  //even with the precise name input to the api, zomato still returns multiple establishments
+                                  //so this function filters the Zomato results for the exact pub
+  let queryURL = "https://developers.zomato.com/api/v2.1/search?q='" + pubName + "'";
+  // let restFotes;
+  console.log(queryURL);
+  $.ajax({
+      url: queryURL,
+      method: "GET",
+      headers: { "user-key": "7c5b101b634a31bcfcda3cf933e803ba" }
+
+  }).then(function(respZomato){  //iterate through the 
+    console.log(respZomato);
+    $.each(respZomato.restaurants, function(j, pubDeets){  //loop through the list of potentially matching restaurants
+                                                           //to find the exact match using regex .test function
+
+      let testName = new RegExp(pubDeets.restaurant.name);  //create a regular expression of the name of the current restaurant from the Zomato API
+      if (testName.test(pubName)) {   //regex test if the Zomato restaurant name matches the name from foursquare
+        console.log("regex works for " + pubName + ".");
+        // restFotes = getPhotoPub(pubDeets, i)  //call function to retrieve the Zomato photos
+        getPhotoPub(pubDeets, i)
+        return false;
+      }
     })
+  })
+  // return restFotes;
+}
+
+function getPhotoPub(pubDeets, i) {  //iterate through the object containing the photos for each matching restaurant in Zomato 
+  $.each(pubDeets.restaurant.photos, function(j, fote) {
+    console.log(fote.photo.url);
+    let foteURL = fote.photo.url;
+    console.log(foteURL);
+    console.log(restFotes);
+    restFotes[j] = foteURL;
+  })
+  // return restFotes;
 }
