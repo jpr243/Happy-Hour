@@ -31,7 +31,7 @@
 
 <!-- <body id="page-top"> -->
   <!--Map Trial-->
-  <script src="https://maps.googleapis.com/maps/api/js?key=Your_API_Key"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=Your_API_Key"></script> -->
 
   <!-- Modal Age Check-->
 
@@ -270,7 +270,6 @@
                 <p class="bar-address">Hay St & Cathedral Ave</p>
                 <p id="bar-hours"></p>
                 <p id="bar-phone"></p>
-                <p id="bar-website"></p>
 
                 <button class="btn btn-primary" href="#" data-dismiss="modal">
                   <i class="fas fa-times fa-fw"></i>
@@ -350,15 +349,15 @@
   <script src="js/logic.js"></script>
 
   <script>
-  $(".distance-select").on("click", function(event) {
-    event.preventDefault();
-    maxBarDistance = this.id;
-    returnMaxBarDistance(maxBarDistance);
+  // $(".distance-select").on("click", function(event) {
+  //   event.preventDefault();
+  //   maxBarDistance = this.id;
+  //   returnMaxBarDistance(maxBarDistance);
     
-    let userSearch = $("#user-location-input").val();
-    console.log("Searching bars near " + userSearch + " within a radius of " + maxBarDistance);
-    searchByUserLocation(userSearch, maxBarDistance);
-  });
+  //   let userSearch = $("#user-location-input").val();
+  //   console.log("Searching bars near " + userSearch + " within a radius of " + maxBarDistance);
+  //   searchByUserLocation(userSearch, maxBarDistance);
+  // });
     $("#bar-search-button").on("click", function (event) {
       event.preventDefault();
       // maxBarDistance = this.id;
