@@ -88,9 +88,33 @@ function getLatAndLong(locations) {
     let latitude = searchResults[i].location.lat;
     let longitude = searchResults[i].location.lng;
     console.log(locations[i].name, latitude, longitude);
-    // arrPhotoURL[i] = getPhotos(locations[i].name); //array that contains the photo for the bar chosen
     getZomPub(locations[i].name, i);
-    arrPhotoURL[i] = restFotes.slice(0);
+    arrPhotoURL = [ {pub: "Captain Stirling Hotel",
+                     photos: ["https://b.zmtcdn.com/data/reviews_photos/937/57a80e1814c8b8dfa6c32dbf38989937_1509103086.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/82d/c3951ddbe030e535b981e85800a6182d_1500722823.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/c0e/3323b1472c566f817ccf2d33ffe7fc0e_1509103092.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/5a9/1476432470eef009ef3438915d6125a9_1509103091.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/c18/c25818e78a453a1cdd708ff6815d4c18_1500722823.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/13f/131214b7a4d7b45c198903900a17013f_1509103089.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/1ec/aef644c75249d421c44e4d2a03f551ec_1500722824.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/852/5f4d0600df9a1711caf58b53af2f0852_1500722824.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/253/5aef167df8e3bb352dada47fc6555253_1500722822.jpg"
+                     ,"https://b.zmtcdn.com/data/reviews_photos/e9b/1e07183e6b7d2ed86b633f8429860e9b_1500722824.jpg"]}
+                    {pub: "Varsity Bar", 
+                    photos: ["https://b.zmtcdn.com/data/reviews_photos/dd7/fd3a2450069eb37f3f2d4ef91786bdd7_1571983140.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/82d/c3951ddbe030e535b981e85800a6182d_1500722823.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/c0e/3323b1472c566f817ccf2d33ffe7fc0e_1509103092.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/5a9/1476432470eef009ef3438915d6125a9_1509103091.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/c18/c25818e78a453a1cdd708ff6815d4c18_1500722823.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/13f/131214b7a4d7b45c198903900a17013f_1509103089.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/1ec/aef644c75249d421c44e4d2a03f551ec_1500722824.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/852/5f4d0600df9a1711caf58b53af2f0852_1500722824.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/253/5aef167df8e3bb352dada47fc6555253_1500722822.jpg"
+                    ,"https://b.zmtcdn.com/data/reviews_photos/e9b/1e07183e6b7d2ed86b633f8429860e9b_1500722824.jpg"]}
+                    ,{pub: "The Mount", 
+                      photos: []}]
+
+    // arrPhotoURL[i] = restFotes.slice(0);
     restFotes = [];
 
 function appendOpeningHoursAndContactDetails(i, hours, contact) {
@@ -105,13 +129,11 @@ function appendOpeningHoursAndContactDetails(i, hours, contact) {
       .find("#bar-phone")
       .html(contact);
   }
-  console.log("Final array of photo urls: " + arrPhotoURL);
 }
 
 function getZomPub(pubName, i) {  //even with the precise name input to the api, zomato still returns multiple establishments
                                   //so this function filters the Zomato results for the exact pub
   let queryURL = "https://developers.zomato.com/api/v2.1/search?q='" + pubName + "'";
-  // let restFotes;
   console.log(queryURL);
   $.ajax({
       url: queryURL,
@@ -126,21 +148,15 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
       let testName = new RegExp(pubDeets.restaurant.name);  //create a regular expression of the name of the current restaurant from the Zomato API
       if (testName.test(pubName)) {   //regex test if the Zomato restaurant name matches the name from foursquare
         console.log("regex works for " + pubName + ".");
-        // restFotes = getPhotoPub(pubDeets, i)  //call function to retrieve the Zomato photos
         getPhotoPub(pubDeets);
         return false;
       }
     })
   })
-  // return restFotes;
 }
 
 function getPhotoPub(pubDeets) {  //iterate through the object containing the photos for each matching restaurant in Zomato 
   $.each(pubDeets.restaurant.photos, function(j, fote) {
-    // console.log(fote.photo.url);
-    // let foteURL = fote.photo.url;
-    // console.log(foteURL);
-    // console.log(restFotes);
     restFotes[j] = fote.photo.url;
   })
   console.log(restFotes);
