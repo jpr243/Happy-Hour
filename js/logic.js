@@ -2,30 +2,41 @@ let searchResults = [];
 let arrPhotoURL = [];
 let restFotes = [];
 
+// Searches by user input and returns bars in WA within 1km.
 function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
     userInput +
-    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&limit=5&client_id=JQIY4W3MHQQLTPORXPCA2XJDIWTFHBZDTLJPO4F3IBWLH5NI&client_secret=TOTL05GAHJ5IFFA44YJL1HNPLB2HDABTV025VKIRNN34WYYV&v=20191105";
+    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&client_id=JQIY4W3MHQQLTPORXPCA2XJDIWTFHBZDTLJPO4F3IBWLH5NI&client_secret=TOTL05GAHJ5IFFA44YJL1HNPLB2HDABTV025VKIRNN34WYYV&v=20191105";
 
   $.ajax({
     url: queryUrl,
     method: "GET",
     datatype: "json",
-    success: showResults
+    success: showResults,
+    error: noResultsFound
   });
 
+  // If query returns response, get results and call append functions.
   function showResults(response) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     // let lat = response.response.venues[0].location.lat;
     // let lng = response.response.venues[0].location.lng;
     appendLocationDetailsToPage(searchResults);
-    // getLatAndLong(searchResults);
     getMoreBarDetails(searchResults);
+  }
+
+  // If no response, display error message in HTML.
+  function noResultsFound() {
+    let noResultsDiv = $("#portfolio").append("<div>");
+    let noResultsAlert = $(noResultsDiv).append("<p>");
+    $(noResultsAlert).html("No results found :(");
+    $(noResultsAlert).attr("id", "no-results-message");
   }
 }
 
+// Appends results and modals dynamically to page.
 function appendLocationDetailsToPage(locations) {
   for (let i = 0; i < locations.length; i++) {
     let barName = locations[i].name;
@@ -54,9 +65,8 @@ function appendLocationDetailsToPage(locations) {
   }
 }
 
+// New ajax query for venue hours and phone number where available.
 function getMoreBarDetails(locations) {
-  let moreDetails = [];
-
   for (let i = 0; i < locations.length; i++) {
     let venueId = locations[i].id;
     queryUrl =
@@ -68,17 +78,19 @@ function getMoreBarDetails(locations) {
       url: queryUrl,
       method: "GET"
     }).then(function(response) {
+      console.log(queryUrl);
+
       let venueHours = response.response.venue.hours.status;
       console.log(venueHours);
 
       let contactDetails = response.response.venue.contact.formattedPhone;
       console.log(contactDetails);
-      moreDetails.push({
-        venueHours: venueHours,
-        contactDetails: contactDetails
-      });
 
-      appendOpeningHoursAndContactDetails(i, venueHours, contactDetails);
+      appendOpeningHoursAndContactDetails({
+        loop: i,
+        hours: venueHours,
+        contact: contactDetails,
+      });
     });
   }
 }
@@ -99,7 +111,7 @@ function getLatAndLong(locations) {
                      ,"https://b.zmtcdn.com/data/reviews_photos/1ec/aef644c75249d421c44e4d2a03f551ec_1500722824.jpg"
                      ,"https://b.zmtcdn.com/data/reviews_photos/852/5f4d0600df9a1711caf58b53af2f0852_1500722824.jpg"
                      ,"https://b.zmtcdn.com/data/reviews_photos/253/5aef167df8e3bb352dada47fc6555253_1500722822.jpg"
-                     ,"https://b.zmtcdn.com/data/reviews_photos/e9b/1e07183e6b7d2ed86b633f8429860e9b_1500722824.jpg"]}
+                     ,"https://b.zmtcdn.com/data/reviews_photos/e9b/1e07183e6b7d2ed86b633f8429860e9b_1500722824.jpg"]},
                     {pub: "Varsity Bar", 
                     photos: ["https://b.zmtcdn.com/data/reviews_photos/dd7/fd3a2450069eb37f3f2d4ef91786bdd7_1571983140.jpg"
                     ,"https://b.zmtcdn.com/data/reviews_photos/82d/c3951ddbe030e535b981e85800a6182d_1500722823.jpg"
@@ -116,18 +128,28 @@ function getLatAndLong(locations) {
 
     // arrPhotoURL[i] = restFotes.slice(0);
     restFotes = [];
-
-function appendOpeningHoursAndContactDetails(i, hours, contact) {
-  if (hours !== undefined) {
-    $("#modal-" + i)
+  }}
+// Appends results from getMoreBarDetails function to existing modals.
+function appendOpeningHoursAndContactDetails(inputs) {
+  // inputs = {loop: i, hours: venueHours, contact: contactDetails}
+  if (inputs.hours !== undefined) {
+    $("#modal-" + inputs.loop)
       .find("#bar-hours")
-      .html(hours);
+      .html(inputs.hours);
+  } else {
+    $("#modal-" + inputs.loop)
+      .find("#bar-hours")
+      .html("No opening hours available");
   }
 
-  if (contact !== undefined) {
-    $("#modal-" + i)
+  if (inputs.contact !== undefined) {
+    $("#modal-" + inputs.loop)
       .find("#bar-phone")
-      .html(contact);
+      .html(inputs.contact);
+  } else {
+    $("#modal-" + inputs.loop)
+      .find("#bar-phone")
+      .html("No contact details available");
   }
 }
 
@@ -161,3 +183,4 @@ function getPhotoPub(pubDeets) {  //iterate through the object containing the ph
   })
   console.log(restFotes);
 }
+  
