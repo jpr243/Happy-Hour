@@ -22,7 +22,7 @@ function searchByUserLocation(userInput) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
-    getPubPhotos(searchResults);
+    // getPubPhotos(searchResults);
     getMoreBarDetails(searchResults);
   }
 
@@ -61,6 +61,8 @@ function appendLocationDetailsToPage(locations) {
     $(barModal)
       .find(".bar-address")
       .html(barAddress);
+    
+    getPubPhotos(locations)
   }
 }
 
@@ -71,7 +73,7 @@ function getMoreBarDetails(locations) {
     queryUrl =
       "https://api.foursquare.com/v2/venues/" +
       venueId +
-      "?&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
+      "?&client_id=CVLB2JMHWA0N40KS4OYWLBJRT0OUIV5OOJE5RPFX3BEZXFKT&client_secret=UPTXBIFIG5XNITT4XJZTL0EBYDRQ0H1VGV2Q5GC1PYPKCEZ1&v=20191105";
 
     $.ajax({
       url: queryUrl,
@@ -92,6 +94,12 @@ function getMoreBarDetails(locations) {
       });
     });
   }
+}
+
+function appendImagesToModal(photo, i) {
+  let barImage = $("#modal-" + i).find("#bar-image");
+  $(barImage).attr("src", photo);
+  console.log("Appended");
 }
 
 function getPubPhotos(locations) {
@@ -149,7 +157,7 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
       if (testName.test(pubName)) {   //regex test if the Zomato restaurant name matches the name from foursquare
         console.log("regex works for " + pubName + ".");
         restFotes = {pub: pubName};
-        getPhotoPub(pubDeets);
+        getPhotoPub(pubDeets, i);
         return false;
       }
     })
@@ -163,11 +171,10 @@ function getZomPub(pubName, i) {  //even with the precise name input to the api,
   })
 }
 
-function getPhotoPub(pubDeets, pubName) {  //iterate through the object containing the photos for each matching restaurant in Zomato
+function getPhotoPub(pubDeets, i) {  //iterate through the object containing the photos for each matching restaurant in Zomato
   let photo = [];
-  $.each(pubDeets.restaurant.photos, function(j, fote) {
-    photo[j] = fote.photo.url;
-  })
-  restFotes.photos = photo;
-}
+  // $.each(pubDeets.restaurant.photo, function(j, fote) {
+    photo = pubDeets.restaurant.photos[0].photo.url;
+    appendImagesToModal(photo, i);
+  }
   
