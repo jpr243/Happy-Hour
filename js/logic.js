@@ -2,7 +2,9 @@ let searchResults = [];
 let arrPhotoURL = [];
 let restFotes = {};
 
+$("#modal-validate").modal({show: false});
 
+validateUserLocation
 function validateUserLocation(userInput) {
   let listOfSubarbs = ["alexander heights", "alfred cove", "alkimos", "anketell", "applecross", "ardross", "armadale",
     "ascot", "ashby", "ashfield", "attadale", "atwell", "aubin grove", "aveley", "bailup", "balcatta", "baldivis", "balga",
@@ -45,7 +47,12 @@ function validateUserLocation(userInput) {
 
   let userInputLower = userInput.toLowerCase();
 
-  listOfSubarbs.indexOf(userInputLower) > -1 ? searchByUserLocation(userInput) : alert('Please enter a valid Perth suburb.');
+  if (listOfSubarbs.includes(userInputLower)) {
+    searchByUserLocation(userInput);
+  }
+  else {
+    $("#modal-validate").modal("show");
+  }
 }
 
 // Searches by user input and returns bars in WA within 1km.
