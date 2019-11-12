@@ -7,7 +7,7 @@ function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
     userInput +
-    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&limit=5&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
+    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&limit=2&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
 
   $.ajax({
     url: queryUrl,
@@ -22,7 +22,8 @@ function searchByUserLocation(userInput) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
-    // getPubPhotos(searchResults);
+    getLatitudeAndLongitude(searchResults);
+    appendPubPhotos(searchResults);
     getMoreBarDetails(searchResults);
   }
 
@@ -61,8 +62,6 @@ function appendLocationDetailsToPage(locations) {
     $(barModal)
       .find(".bar-address")
       .html(barAddress);
-    
-    getPubPhotos(locations)
   }
 }
 
@@ -90,31 +89,26 @@ function getMoreBarDetails(locations) {
       appendOpeningHoursAndContactDetails({
         loop: i,
         hours: venueHours,
-        contact: contactDetails,
+        contact: contactDetails
       });
     });
   }
 }
 
-function appendImagesToModal(photo, i) {
-  let barImage = $("#modal-" + i).find("#bar-image");
-  $(barImage).attr("src", photo);
-  console.log("Appended");
+function getLatitudeAndLongitude(locations) {
+  locations.forEach(function(location) {
+    let latitude = location.location.lat;
+    let longitude = location.location.lng;
+    console.log(latitude, longitude);
+  });
 }
-
-function getPubPhotos(locations) {
-  for (let i = 0; i < locations.length; i++) {
-    console.log(locations[i].name);
-    getZomPub(locations[i].name, i);
-  }
-}
-
 
 function appendOpeningHoursAndContactDetails(i, hours, contact) {
   if (hours !== undefined) {
-    $("#modal-" + i)
+    $("#modal-" + i);
     restFotes = [];
-  }}
+  }
+}
 // Appends results from getMoreBarDetails function to existing modals.
 function appendOpeningHoursAndContactDetails(inputs) {
   // inputs = {loop: i, hours: venueHours, contact: contactDetails}
@@ -139,42 +133,91 @@ function appendOpeningHoursAndContactDetails(inputs) {
   }
 }
 
-function getZomPub(pubName, i) {  //even with the precise name input to the api, zomato still returns multiple establishments
-                                  //so this function filters the Zomato results for the exact pub
-  let queryURL = "https://developers.zomato.com/api/v2.1/search?q='" + pubName + "'";
-  console.log(queryURL);
-  $.ajax({
+function appendPubPhotos(searchResults) {
+  searchResults.forEach((pub, index) => {
+    console.log("Getting photos for " + pub.name);
+    console.log(pub);
+    getZomatoPhotos(pub.name, pub.location.lat, pub.location.lng, index, 0);
+  });
+}
+
+function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
+  console.log("Latitude: " + latitude + " Longitude: " + longitude);
+  console.log("zomatoCycle: " + zomatoCycle);
+  if (zomatoCycle == 1) {
+    console.log("Couldnt find match in zomato");
+  } else {
+    let queryURL =
+      "https://developers.zomato.com/api/v2.1/search?lat=" +
+      latitude +
+      "&lon=" +
+      longitude +
+      "&start=" +
+      "zomatoCycle" * 20;
+    //let queryURL = "https://developers.zomato.com/api/v2.1/search?=" + latitude +"&lon="+longitude+"&start="+zomatoCycle*20+"&radius=5";
+    //let queryURL = "https://developers.zomato.com/api/v2.1/locations?lat=" + latitude +"&lon="+longitude+"&query='"+pubName+"'"+"&count=20";
+    console.log(queryURL);
+    $.ajax({
       url: queryURL,
       method: "GET",
       headers: { "user-key": "7c5b101b634a31bcfcda3cf933e803ba" }
-
-  }).done(function(respZomato){  //iterate through the 
-    console.log(respZomato);
-    $.each(respZomato.restaurants, function(j, pubDeets){  //loop through the list of potentially matching restaurants
-                                                           //to find the exact match using regex .test function
-
-      let testName = new RegExp(pubDeets.restaurant.name);  //create a regular expression of the name of the current restaurant from the Zomato API
-      if (testName.test(pubName)) {   //regex test if the Zomato restaurant name matches the name from foursquare
-        console.log("regex works for " + pubName + ".");
-        restFotes = {pub: pubName};
-        getPhotoPub(pubDeets, i);
-        return false;
-      }
-    })
-    //populate the array containing the pub and photo objects
-    if (restFotes.pub !== undefined) {
-      console.log(restFotes.pub);
-      arrPhotoURL[i] = restFotes;
-    }
-    restFotes = {};
-    console.log(arrPhotoURL);
-  })
+    }).done(zomatoPhotosResponse =>
+      processZomatoPhotos(
+        zomatoPhotosResponse,
+        pubName,
+        index,
+        zomatoCycle,
+        latitude,
+        longitude
+      )
+    );
+  }
 }
 
-function getPhotoPub(pubDeets, i) {  //iterate through the object containing the photos for each matching restaurant in Zomato
-  let photo = [];
-  // $.each(pubDeets.restaurant.photo, function(j, fote) {
-    photo = pubDeets.restaurant.photos[0].photo.url;
-    appendImagesToModal(photo, i);
+function processZomatoPhotos(
+  zomatoPhotosResponse,
+  pubName,
+  index,
+  zomatoCycle,
+  latitude,
+  longitude
+) {
+  console.log("Processing Zomato Response: ");
+  console.log(zomatoPhotosResponse);
+  let filteredZomatoResponse = zomatoPhotosResponse.restaurants.filter(
+    zomatoRestaurant => {
+      return isItTheActualPub(zomatoRestaurant, pubName);
+    }
+  );
+  console.log("Filtered Zomato Response");
+  console.log(filteredZomatoResponse);
+  if (filteredZomatoResponse.length > 0) {
+    let zomatoPhotoArray = filteredZomatoResponse[0].photos;
+    appendZomatoImagesToModal({
+      zomatoPhotoArray: zomatoPhotoArray,
+      pubName: pubName,
+      index: index
+    });
+  } else {
+    zomatoCycle++;
+    getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle);
   }
-  
+}
+
+function isItTheActualPub(zomatoRestaurant, pubName) {
+  console.log(
+    "Comparing: " + zomatoRestaurant.restaurant.name + " and: " + pubName
+  );
+  let regExpression = new RegExp(pubName);
+  return regExpression.test(zomatoRestaurant.restaurant.name);
+}
+
+function appendZomatoImagesToModal(inputs) {
+  console.log("Appending to Modal");
+  console.log(inputs);
+
+  let imageDiv = $("#modal-" + index).find("#bar-image");
+
+  imageDiv.attr("src", inputs.zomatoPhotoArray[0].photo.url);
+  console.log("Appended");
+}
