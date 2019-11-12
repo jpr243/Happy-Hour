@@ -2,6 +2,7 @@ let searchResults = [];
 let arrPhotoURL = [];
 let restFotes = {};
 
+// Searches by user input and returns bars in WA within 1km.
 function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
@@ -12,18 +13,29 @@ function searchByUserLocation(userInput) {
     url: queryUrl,
     method: "GET",
     datatype: "json",
-    success: showResults
+    success: showResults,
+    error: noResultsFound
   });
 
+  // If query returns response, get results and call append functions.
   function showResults(response) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
-    getLatAndLong(searchResults);
+    getPubPhotos(searchResults);
     getMoreBarDetails(searchResults);
+  }
+
+  // If no response, display error message in HTML.
+  function noResultsFound() {
+    let noResultsDiv = $("#portfolio").append("<div>");
+    let noResultsAlert = $(noResultsDiv).append("<p>");
+    $(noResultsAlert).html("No results found :(");
+    $(noResultsAlert).attr("id", "no-results-message");
   }
 }
 
+// Appends results and modals dynamically to page.
 function appendLocationDetailsToPage(locations) {
   for (let i = 0; i < locations.length; i++) {
     let barName = locations[i].name;
@@ -52,9 +64,8 @@ function appendLocationDetailsToPage(locations) {
   }
 }
 
+// New ajax query for venue hours and phone number where available.
 function getMoreBarDetails(locations) {
-  let moreDetails = [];
-
   for (let i = 0; i < locations.length; i++) {
     let venueId = locations[i].id;
     queryUrl =
@@ -67,26 +78,25 @@ function getMoreBarDetails(locations) {
       method: "GET"
     }).then(function(response) {
       console.log(response);
+
       let venueHours = response.response.venue.hours.status;
       console.log(venueHours);
 
       let contactDetails = response.response.venue.contact.formattedPhone;
       console.log(contactDetails);
-      moreDetails.push({
-        venueHours: venueHours,
-        contactDetails: contactDetails
-      });
 
-      appendOpeningHoursAndContactDetails(i, venueHours, contactDetails);
+      appendOpeningHoursAndContactDetails({
+        loop: i,
+        hours: venueHours,
+        contact: contactDetails,
+      });
     });
   }
 }
 
-function getLatAndLong(locations) {
+function getPubPhotos(locations) {
   for (let i = 0; i < locations.length; i++) {
-    let latitude = searchResults[i].location.lat;
-    let longitude = searchResults[i].location.lng;
-    console.log(locations[i].name, latitude, longitude);
+    console.log(locations[i].name);
     getZomPub(locations[i].name, i);
   }
 }
@@ -95,14 +105,29 @@ function getLatAndLong(locations) {
 function appendOpeningHoursAndContactDetails(i, hours, contact) {
   if (hours !== undefined) {
     $("#modal-" + i)
+    restFotes = [];
+  }}
+// Appends results from getMoreBarDetails function to existing modals.
+function appendOpeningHoursAndContactDetails(inputs) {
+  // inputs = {loop: i, hours: venueHours, contact: contactDetails}
+  if (inputs.hours !== undefined) {
+    $("#modal-" + inputs.loop)
       .find("#bar-hours")
-      .html(hours);
+      .html(inputs.hours);
+  } else {
+    $("#modal-" + inputs.loop)
+      .find("#bar-hours")
+      .html("No opening hours available");
   }
 
-  if (contact !== undefined) {
-    $("#modal-" + i)
+  if (inputs.contact !== undefined) {
+    $("#modal-" + inputs.loop)
       .find("#bar-phone")
-      .html(contact);
+      .html(inputs.contact);
+  } else {
+    $("#modal-" + inputs.loop)
+      .find("#bar-phone")
+      .html("No contact details available");
   }
 }
 
@@ -145,3 +170,4 @@ function getPhotoPub(pubDeets, pubName) {  //iterate through the object containi
   })
   restFotes.photos = photo;
 }
+  
