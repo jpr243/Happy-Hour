@@ -7,7 +7,7 @@ function searchByUserLocation(userInput) {
   queryUrl =
     "https://api.foursquare.com/v2/venues/search?near=" +
     userInput +
-    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&limit=2&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
+    "%20WA&categoryId=4bf58dd8d48988d116941735&radius=1000&client_id=LXW4D1FR20T23BWGUZEGLJHBLPHZOYB2XXRFUK233JM0KHJD&client_secret=1NHWFLIFEX1RDNFRDPN4TL04GW0LO4SLWXBFWOGB31BD2K3H&v=20191105";
 
   $.ajax({
     url: queryUrl,
@@ -22,7 +22,6 @@ function searchByUserLocation(userInput) {
     searchResults = response.response.venues;
     console.log(queryUrl);
     appendLocationDetailsToPage(searchResults);
-    getLatitudeAndLongitude(searchResults);
     appendPubPhotos(searchResults);
     getMoreBarDetails(searchResults);
   }
@@ -95,14 +94,6 @@ function getMoreBarDetails(locations) {
   }
 }
 
-function getLatitudeAndLongitude(locations) {
-  locations.forEach(function(location) {
-    let latitude = location.location.lat;
-    let longitude = location.location.lng;
-    console.log(latitude, longitude);
-  });
-}
-
 function appendOpeningHoursAndContactDetails(i, hours, contact) {
   if (hours !== undefined) {
     $("#modal-" + i);
@@ -146,7 +137,7 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
   console.log("zomatoCycle: " + zomatoCycle);
   if (zomatoCycle == 1) {
     console.log("Couldn't find match in Zomato.");
-    console.table(comparisons)
+    console.table(comparisons);
   } else {
     let queryURL =
       "https://developers.zomato.com/api/v2.1/search?lat=" +
@@ -154,7 +145,10 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
       "&lon=" +
       longitude +
       "&start=" +
-      zomatoCycle * 20+"&sort='real_distance'&radius=100&order='asc'&q='"+pubName.replace(/[^a-zA-Z0-9-_]/g, ' ')+"'";
+      zomatoCycle * 20 +
+      "&sort='real_distance'&radius=100&order='asc'&q='" +
+      pubName.replace(/[^a-zA-Z0-9-_]/g, " ") +
+      "'";
     //let queryURL = "https://developers.zomato.com/api/v2.1/search?=" + latitude +"&lon="+longitude+"&start="+zomatoCycle*20+"&radius=5";
     //let queryURL = "https://developers.zomato.com/api/v2.1/locations?lat=" + latitude +"&lon="+longitude+"&query='"+pubName+"'"+"&count=20";
     console.log(queryURL);
@@ -175,20 +169,14 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
   }
 }
 
-function processZomatoPhotos(
-  zomatoPhotosResponse,
-  pubName,
-  index
-) {
+function processZomatoPhotos(zomatoPhotosResponse, pubName, index) {
   console.log("Processing Zomato response: ");
   console.log(zomatoPhotosResponse);
-  
-  
 
-  for (let i = 0;i<zomatoPhotosResponse.restaurants.length;i++){
-    let zomatoRestaurant = zomatoPhotosResponse.restaurants[i]
-    if(isItTheActualPub(zomatoRestaurant,pubName)){
-      let zomatoPhotoArray = zomatoRestaurant.restaurant.photos
+  for (let i = 0; i < zomatoPhotosResponse.restaurants.length; i++) {
+    let zomatoRestaurant = zomatoPhotosResponse.restaurants[i];
+    if (isItTheActualPub(zomatoRestaurant, pubName)) {
+      let zomatoPhotoArray = zomatoRestaurant.restaurant.photos;
       appendZomatoImagesToModal({
         zomatoPhotoArray: zomatoPhotoArray,
         pubName: pubName,
@@ -198,20 +186,22 @@ function processZomatoPhotos(
     }
   }
 }
-  
 
 function isItTheActualPub(zomatoRestaurant, pubName) {
   console.log(
     "Comparing " + zomatoRestaurant.restaurant.name + " and " + pubName
   );
- 
-  let stringSimilarity = stringSimilarityFunction(zomatoRestaurant.restaurant.name,pubName)
-  if(stringSimilarity < 5){
-    console.log("Similar strings!"+stringSimilarity)
-    return true
+
+  let stringSimilarity = stringSimilarityFunction(
+    zomatoRestaurant.restaurant.name,
+    pubName
+  );
+  if (stringSimilarity < 5) {
+    console.log("Similar strings!" + stringSimilarity);
+    return true;
   } else {
-    console.log("Not similar strings: "+stringSimilarity)
-    return false
+    console.log("Not similar strings: " + stringSimilarity);
+    return false;
   }
 }
 
@@ -225,39 +215,41 @@ function appendZomatoImagesToModal(inputs) {
   console.log("Appended");
 }
 
-
-
 // Compute the edit distance between the two given strings
-function stringSimilarityFunction(a, b){
-      if(a.length == 0) return b.length; 
-      if(b.length == 0) return a.length; 
+function stringSimilarityFunction(a, b) {
+  if (a.length == 0) return b.length;
+  if (b.length == 0) return a.length;
 
-      var matrix = [];
+  var matrix = [];
 
-      // increment along the first column of each row
-      var i;
-      for(i = 0; i <= b.length; i++){
-          matrix[i] = [i];
+  // increment along the first column of each row
+  var i;
+  for (i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+
+  // increment each column in the first row
+  var j;
+  for (j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  // Fill in the rest of the matrix
+  for (i = 1; i <= b.length; i++) {
+    for (j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) == a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          Math.min(
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1
+          )
+        ); // deletion
       }
-
-      // increment each column in the first row
-      var j;
-      for(j = 0; j <= a.length; j++){
-          matrix[0][j] = j;
-      }
-
-      // Fill in the rest of the matrix
-      for(i = 1; i <= b.length; i++){
-          for(j = 1; j <= a.length; j++){
-          if(b.charAt(i-1) == a.charAt(j-1)){
-              matrix[i][j] = matrix[i-1][j-1];
-          } else {
-              matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
-                                      Math.min(matrix[i][j-1] + 1, // insertion
-                                              matrix[i-1][j] + 1)); // deletion
-          }
-          }
-      }
+    }
+  }
 
   return matrix[b.length][a.length];
-};
+}
