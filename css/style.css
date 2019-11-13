@@ -21,3 +21,7 @@
 #no-results-message {
   text-align: center;
 }
+
+#modal-validate {
+  top: 450px;
+}
