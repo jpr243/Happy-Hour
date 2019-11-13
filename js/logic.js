@@ -145,7 +145,8 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
   console.log("Latitude: " + latitude + " Longitude: " + longitude);
   console.log("zomatoCycle: " + zomatoCycle);
   if (zomatoCycle == 1) {
-    console.log("Couldnt find match in zomato");
+    console.log("Couldn't find match in Zomato.");
+    console.table(comparisons)
   } else {
     let queryURL =
       "https://developers.zomato.com/api/v2.1/search?lat=" +
@@ -153,7 +154,7 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
       "&lon=" +
       longitude +
       "&start=" +
-      "zomatoCycle" * 20;
+      zomatoCycle * 20+"&sort='real_distance'&radius=100&order='asc'&q='"+pubName.replace(/[^a-zA-Z0-9-_]/g, ' ')+"'";
     //let queryURL = "https://developers.zomato.com/api/v2.1/search?=" + latitude +"&lon="+longitude+"&start="+zomatoCycle*20+"&radius=5";
     //let queryURL = "https://developers.zomato.com/api/v2.1/locations?lat=" + latitude +"&lon="+longitude+"&query='"+pubName+"'"+"&count=20";
     console.log(queryURL);
@@ -177,47 +178,86 @@ function getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle) {
 function processZomatoPhotos(
   zomatoPhotosResponse,
   pubName,
-  index,
-  zomatoCycle,
-  latitude,
-  longitude
+  index
 ) {
-  console.log("Processing Zomato Response: ");
+  console.log("Processing Zomato response: ");
   console.log(zomatoPhotosResponse);
-  let filteredZomatoResponse = zomatoPhotosResponse.restaurants.filter(
-    zomatoRestaurant => {
-      return isItTheActualPub(zomatoRestaurant, pubName);
+  
+  
+
+  for (let i = 0;i<zomatoPhotosResponse.restaurants.length;i++){
+    let zomatoRestaurant = zomatoPhotosResponse.restaurants[i]
+    if(isItTheActualPub(zomatoRestaurant,pubName)){
+      let zomatoPhotoArray = zomatoRestaurant.restaurant.photos
+      appendZomatoImagesToModal({
+        zomatoPhotoArray: zomatoPhotoArray,
+        pubName: pubName,
+        index: index
+      });
+      break;
     }
-  );
-  console.log("Filtered Zomato Response");
-  console.log(filteredZomatoResponse);
-  if (filteredZomatoResponse.length > 0) {
-    let zomatoPhotoArray = filteredZomatoResponse[0].photos;
-    appendZomatoImagesToModal({
-      zomatoPhotoArray: zomatoPhotoArray,
-      pubName: pubName,
-      index: index
-    });
-  } else {
-    zomatoCycle++;
-    getZomatoPhotos(pubName, latitude, longitude, index, zomatoCycle);
   }
 }
+  
 
 function isItTheActualPub(zomatoRestaurant, pubName) {
   console.log(
-    "Comparing: " + zomatoRestaurant.restaurant.name + " and: " + pubName
+    "Comparing " + zomatoRestaurant.restaurant.name + " and " + pubName
   );
-  let regExpression = new RegExp(pubName);
-  return regExpression.test(zomatoRestaurant.restaurant.name);
+ 
+  let stringSimilarity = stringSimilarityFunction(zomatoRestaurant.restaurant.name,pubName)
+  if(stringSimilarity < 5){
+    console.log("Similar strings!"+stringSimilarity)
+    return true
+  } else {
+    console.log("Not similar strings: "+stringSimilarity)
+    return false
+  }
 }
 
 function appendZomatoImagesToModal(inputs) {
-  console.log("Appending to Modal");
+  console.log("Appending to modal");
   console.log(inputs);
 
-  let imageDiv = $("#modal-" + index).find("#bar-image");
+  let imageDiv = $("#modal-" + inputs.index).find("#bar-image");
 
   imageDiv.attr("src", inputs.zomatoPhotoArray[0].photo.url);
   console.log("Appended");
 }
+
+
+
+// Compute the edit distance between the two given strings
+function stringSimilarityFunction(a, b){
+      if(a.length == 0) return b.length; 
+      if(b.length == 0) return a.length; 
+
+      var matrix = [];
+
+      // increment along the first column of each row
+      var i;
+      for(i = 0; i <= b.length; i++){
+          matrix[i] = [i];
+      }
+
+      // increment each column in the first row
+      var j;
+      for(j = 0; j <= a.length; j++){
+          matrix[0][j] = j;
+      }
+
+      // Fill in the rest of the matrix
+      for(i = 1; i <= b.length; i++){
+          for(j = 1; j <= a.length; j++){
+          if(b.charAt(i-1) == a.charAt(j-1)){
+              matrix[i][j] = matrix[i-1][j-1];
+          } else {
+              matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+                                      Math.min(matrix[i][j-1] + 1, // insertion
+                                              matrix[i-1][j] + 1)); // deletion
+          }
+          }
+      }
+
+  return matrix[b.length][a.length];
+};
