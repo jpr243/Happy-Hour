@@ -365,7 +365,8 @@ function validateUserLocation(userInput) {
 
   if (listOfSubarbs.includes(userInputLower)) {
     searchByUserLocation(userInput);
-  } else {
+  }
+  else {
     $("#modal-validate").modal("show");
   }
 }
