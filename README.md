@@ -20,4 +20,4 @@ Future Development Opportunities
 - Users can save favourite bars
 
 
-You can see the app by following this link
+You can see the app by following this link  https://jpr243.github.io/Happy-Hour/
